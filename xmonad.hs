@@ -1,5 +1,6 @@
 import XMonad
 import XMonad.Layout.NoBorders
+import XMonad.Hooks.InsertPosition
 
 import XMonad.Util.Run(spawnPipe)
 import System.IO
@@ -18,7 +19,8 @@ takeScreenshot = do
 main = xmonad defaultConfig
     { terminal    = "urxvt"
     , modMask     = mod4Mask
-    ,keys         = myKeys                    
+    ,keys         = myKeys
+    ,manageHook   = insertPosition End Newer
     }
     
 myKeys x = M.union (M.fromList (newKeys x)) (keys defaultConfig x)    
