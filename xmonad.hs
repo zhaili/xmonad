@@ -1,6 +1,7 @@
 import XMonad
 import XMonad.Layout.NoBorders
 import XMonad.Hooks.InsertPosition
+import XMonad.Hooks.EwmhDesktops
 
 import XMonad.Util.Run(spawnPipe)
 import System.IO
@@ -16,11 +17,13 @@ takeScreenshot = do
   let iso = formatTime defaultTimeLocale "%FT%T" t
   spawn $ "import 'screenshot_" ++ iso ++ ".png'"
 
-main = xmonad defaultConfig
+main = xmonad $ ewmh defaultConfig
     { terminal    = "urxvt"
     , modMask     = mod4Mask
     ,keys         = myKeys
     ,manageHook   = insertPosition End Newer
+    ,handleEventHook = handleEventHook
+                       defaultConfig <+> fullscreenEventHook
     }
     
 myKeys x = M.union (M.fromList (newKeys x)) (keys defaultConfig x)    
