@@ -4,8 +4,14 @@ import XMonad.Hooks.InsertPosition
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.ManageHelpers
 
+import XMonad.Util.Dmenu
 import XMonad.Util.Run(spawnPipe)
+
+import System.Exit
 import System.IO
+
+import Control.Monad
+
 import qualified Data.Map as M
 
 import Data.Time.LocalTime (getZonedTime)
@@ -17,13 +23,21 @@ takeScreenshot = do
   t <- liftIO getZonedTime
   let iso = formatTime defaultTimeLocale "%FT%T" t
   spawn $ "import 'screenshot_" ++ iso ++ ".png'"
+  
+quitWithWarning :: X()  
+quitWithWarning = do
+  let m = "confirm quit"
+  a <- dmenu [m, "y", "n"]
+  when (a == "y") (io exitSuccess)
 
 myManageHook = composeOne
     [
-      className =? "Emacs"             -?> doShift "1:dev"
-    , className =? "Google-chrome"     -?> doShift "2:web"
-    , className =? "Icedove"           -?> doShift "5:mail"
-    , isDialog                         -?> doFloat
+      className =? "Emacs"               -?> doShift "1:dev"
+    , className =? "Google-chrome"       -?> doShift "2:web"
+    , className =? "Icedove"             -?> doShift "5:mail"
+    , title     =? "FQTerm Image Viewer" -?> doFloat
+    --, title     =? "fqterm.bin"          -?> doIgnore
+    , isDialog                           -?> doFloat
     ]
 
 main = xmonad $ ewmh defaultConfig
@@ -43,5 +57,6 @@ newKeys conf@(XConfig {XMonad.modMask = modm}) = [
   -- ((modm .|. shiftMask, xK_l), spawn "xtrlock")
   ((modm .|. shiftMask, xK_l), spawn "slock")
   ,((modm , xK_Print), takeScreenshot)
+  ,((modm .|. shiftMask, xK_q), quitWithWarning)
   -- other keybindings here
   ]
