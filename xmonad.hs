@@ -23,12 +23,15 @@ takeScreenshot = do
   t <- liftIO getZonedTime
   let iso = formatTime defaultTimeLocale "%FT%T" t
   spawn $ "import 'screenshot_" ++ iso ++ ".png'"
-  
-quitWithWarning :: X()  
+
+quitWithWarning :: X()
 quitWithWarning = do
   let m = "confirm quit"
   a <- dmenu [m, "y", "n"]
   when (a == "y") (io exitSuccess)
+
+myFocusFollowsMouse :: Bool
+myFocusFollowsMouse = False
 
 myManageHook = composeOne
     [
@@ -48,6 +51,7 @@ main = xmonad $ ewmh defaultConfig
     , manageHook  = myManageHook <+> insertPosition End Newer
     , handleEventHook = handleEventHook
                        defaultConfig <+> fullscreenEventHook
+    , focusFollowsMouse  = myFocusFollowsMouse
     }
 
 myKeys x = M.union (M.fromList (newKeys x)) (keys defaultConfig x)
