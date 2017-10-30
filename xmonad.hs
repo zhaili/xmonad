@@ -15,8 +15,7 @@ import Control.Monad
 import qualified Data.Map as M
 
 import Data.Time.LocalTime (getZonedTime)
-import System.Locale (defaultTimeLocale)
-import Data.Time.Format (formatTime)
+import Data.Time.Format (defaultTimeLocale, formatTime)
 
 takeScreenshot :: X ()
 takeScreenshot = do
