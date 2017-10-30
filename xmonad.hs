@@ -34,12 +34,12 @@ myFocusFollowsMouse = False
 
 myManageHook = composeOne
     [
-      className =? "Emacs"               -?> doShift "1:dev"
+      isDialog                           -?> doFloat
+    , className =? "Emacs"               -?> doShift "1:dev"
     , className =? "Google-chrome"       -?> doShift "2:web"
-    , className =? "Icedove"             -?> doShift "5:mail"
+    , className =? "Mail"                -?> doShift "5:mail"
     , title     =? "FQTerm Image Viewer" -?> doFloat
     --, title     =? "fqterm.bin"          -?> doIgnore
-    , isDialog                           -?> doFloat
     ]
 
 main = xmonad $ ewmh defaultConfig
